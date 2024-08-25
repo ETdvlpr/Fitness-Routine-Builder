@@ -1,24 +1,25 @@
-import 'package:fitness_routine_builder/controllers/routine_controller.dart';
-import 'package:fitness_routine_builder/widgets/routine_detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../providers/routine_provider.dart';
+import '../widgets/routine_detail_screen.dart';
 
 class HomeScreen extends StatelessWidget {
-  final RoutineController controller = Get.put(RoutineController());
+  const HomeScreen({super.key});
 
-  HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    final routineProvider = Provider.of<RoutineProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recent Routines'),
         centerTitle: true,
       ),
       body: ListView.builder(
-        itemCount: controller.recentRoutines.length,
+        itemCount: routineProvider.routines.length,
         itemBuilder: (context, index) {
-          final routine = controller.recentRoutines[index];
+          final routine = routineProvider.routines[index];
           return Card(
             margin: const EdgeInsets.all(10),
             shape:
@@ -36,8 +37,8 @@ class HomeScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          RoutineDetailScreen(routine: routine)),
+                    builder: (context) => RoutineDetailScreen(routine: routine),
+                  ),
                 );
               },
             ),

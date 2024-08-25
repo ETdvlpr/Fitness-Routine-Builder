@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fitness_routine_builder/controllers/routine_controller.dart';
-import 'package:fitness_routine_builder/models/routine.dart';
 import 'package:intl/intl.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import '../models/routine.dart';
+import '../providers/routine_provider.dart';
 
 class RoutineDetailScreen extends StatelessWidget {
   final Routine routine;
@@ -12,19 +12,12 @@ class RoutineDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final RoutineController routineController = Get.find<RoutineController>();
+    final routineProvider = Provider.of<RoutineProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(routine.name),
         actions: [
-          // IconButton(
-          //   icon: Icon(Icons.edit),
-          //   onPressed: () {
-          //     routineController.editRoutine(routine);
-          //     Get.back();
-          //   },
-          // ),
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
@@ -33,20 +26,21 @@ class RoutineDetailScreen extends StatelessWidget {
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text('Delete Routine'),
-                  content:
-                      const Text('Are you sure you want to delete this routine?'),
+                  content: const Text(
+                      'Are you sure you want to delete this routine?'),
                   actions: [
                     TextButton(
                       onPressed: () {
-                        routineController.deleteRoutine(routine);
-                        Get.back(); // Close the dialog
-                        Get.back(); // Navigate back to past routines list
+                        routineProvider.deleteRoutine(routine);
+                        Navigator.of(context).pop(); // Close the dialog
+                        Navigator.of(context)
+                            .pop(); // Navigate back to past routines list
                       },
                       child: const Text('Delete'),
                     ),
                     TextButton(
                       onPressed: () {
-                        Get.back(); // Close the dialog
+                        Navigator.of(context).pop(); // Close the dialog
                       },
                       child: const Text('Cancel'),
                     ),
@@ -87,7 +81,8 @@ class RoutineDetailScreen extends StatelessWidget {
                         height: 50,
                         placeholder: (context, url) =>
                             const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                       title: Text(move.name,
                           style: const TextStyle(fontWeight: FontWeight.bold)),

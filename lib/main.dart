@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:get_storage/get_storage.dart';
+import 'providers/routine_provider.dart';
+import 'repositories/routine_repository.dart';
 import 'views/main_screen.dart';
 
 void main() async {
   await GetStorage.init();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => RoutineProvider(RoutineRepository()),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,7 +24,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       title: 'Fitness Routine Builder',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -22,7 +33,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }
